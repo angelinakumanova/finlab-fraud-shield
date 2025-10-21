@@ -1,0 +1,72 @@
+networks:
+  finlab-net:      
+    driver: bridge
+
+
+volumes:
+  postgres_data:  
+
+services:
+  postgres:         
+    image: postgres:16
+    container_name: finlab_postgres
+    environment:
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: dev
+      POSTGRES_DB: finlab
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - finlab-net
+    ports:
+      - "5432:5432"
+
+  redis:            
+    image: redis:7
+    container_name: finlab_redis
+    networks:
+      - finlab-net
+    ports:
+      - "6379:6379"
+
+  accounts-service: 
+    build: ./accounts-service
+    container_name: finlab_accounts
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/finlab
+      SPRING_DATASOURCE_USERNAME: dev
+      SPRING_DATASOURCE_PASSWORD: dev
+      SERVER_PORT: 8082
+    ports:
+      - "8082:8082"
+    networks:
+      - finlab-net
+
+  api-gateway:   
+    build: ./api-gateway
+    container_name: finlab_gateway
+    depends_on:
+      - accounts-service
+      - redis
+    environment:
+      ACCOUNTS_URL: http://accounts-service:8082
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      SERVER_PORT: 8081
+    ports:
+      - "8081:8081"
+    networks:
+      - finlab-net
+
+  nginx:          
+    build: ./nginx
+    container_name: finlab_nginx
+    depends_on:
+      - api-gateway
+    ports:
+      - "443:443"
+    networks:
+      - finlab-net
