@@ -6,3 +6,4 @@ spring:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/finlab}
     username: ${SPRING_DATASOURCE_USERNAME:dev}
     password: ${SPRING_DATASOURCE_PASSWORD:dev}
+

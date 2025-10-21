@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>FinLab Fraud Shield</title>
+  </head>
+  <body>
+    <h1>FinLab Fraud Shield</h1>
+    <p id="out">Pinging the gateway...</p>
+
+    <script>
+      fetch('/api/v1/accounts/ping')
+        .then(r => r.text())
+        .then(text => document.getElementById('out').innerText = text)
+        .catch(err => document.getElementById('out').innerText = 'Error: ' + err);
+    </script>
+  </body>
+</html>

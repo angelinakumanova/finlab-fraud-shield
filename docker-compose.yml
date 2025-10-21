@@ -19,16 +19,16 @@ services:
       - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - finlab-net
-    ports:
-      - "5432:5432"
+    # ports:
+    #   - "5432:5432"
 
   redis:            
     image: redis:7
     container_name: finlab_redis
     networks:
       - finlab-net
-    ports:
-      - "6379:6379"
+    # ports:
+    #   - "6379:6379"
 
   accounts-service: 
     build: ./accounts-service
@@ -40,8 +40,8 @@ services:
       SPRING_DATASOURCE_USERNAME: dev
       SPRING_DATASOURCE_PASSWORD: dev
       SERVER_PORT: 8082
-    ports:
-      - "8082:8082"
+    # ports:
+    #   - "8082:8082"
     networks:
       - finlab-net
 
@@ -56,8 +56,8 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       SERVER_PORT: 8081
-    ports:
-      - "8081:8081"
+    # ports:
+    #   - "8081:8081"
     networks:
       - finlab-net
 
