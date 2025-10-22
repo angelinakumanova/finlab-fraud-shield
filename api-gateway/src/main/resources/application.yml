@@ -3,8 +3,17 @@ server:
 
 app:
   accountsUrl: ${ACCOUNTS_URL:http://localhost:8082}
+  jwt:
+    secret-b64: ${JWT_SIGNING_KEY_B64}
+    ttl-seconds: ${JWT_TTL_SECONDS:900}
+
 
 spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/finlab}
+    username: ${SPRING_DATASOURCE_USERNAME:dev}
+    password: ${SPRING_DATASOURCE_PASSWORD:dev}
+
   data:
     redis:
       host: ${REDIS_HOST:localhost}
