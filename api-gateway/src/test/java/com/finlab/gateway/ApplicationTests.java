@@ -1,10 +1,10 @@
-package com.finlab.api_gateway;
+package com.finlab.gateway;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ApiGatewayApplicationTests {
+class ApplicationTests {
 
 	@Test
 	void contextLoads() {
