@@ -11,7 +11,6 @@
       <div class="login-card">
         <div class="login-header">
           <h2>FinLab Fraud Shield 💳</h2>
-          <p>Your payments secured.</p>
         </div>
 
         <form class="login-form" id="loginForm" novalidate>
@@ -73,12 +72,13 @@
 
         <!-- Check IBAN Panel -->
         <div class="panel" id="checkPanel">
-          <h4>Check Multiple IBANs</h4>
-          <textarea
-            id="ibanList"
-            placeholder="Enter IBANs (one per line)"
-          ></textarea>
-          <button class="submit-btn" id="checkBtn">Check IBANs</button>
+          <h4>Check IBAN</h4>
+          <input
+            type="text"
+            id="checkIban"
+            placeholder="Enter IBAN"
+          />
+          <button class="submit-btn" id="checkBtn">Check IBAN</button>
           <div id="checkResult"></div>
         </div>
 

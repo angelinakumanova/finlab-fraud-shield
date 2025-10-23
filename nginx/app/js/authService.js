@@ -14,7 +14,7 @@ export async function login(username, password) {
     const errorMsg =
       (response.status === 401
         ? "Invalid username or password."
-        : "Unexpected server error.");
+        : "Unexpected server error. Contact the IT administrator.");
     throw new Error(errorMsg);
   }
 

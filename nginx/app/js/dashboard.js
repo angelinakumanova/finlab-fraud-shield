@@ -1,3 +1,6 @@
+import { getToken } from "./authService.js";
+
+
 // dashboard.js
 export class Dashboard {
   constructor() {
@@ -38,24 +41,67 @@ export class Dashboard {
     });
   }
 
-  handleCheck() {
-    const ibans = document
-      .getElementById("ibanList")
-      .value.trim()
-      .split(/\n+/);
+  async handleCheck() {
+    const ibanInput = document.getElementById("checkIban");
     const resultBox = document.getElementById("checkResult");
-    if (!ibans[0]) {
-      resultBox.innerHTML = `<p class='error-message'>Please enter at least one IBAN.</p>`;
+
+    resultBox.innerHTML = "";
+
+    const iban = ibanInput.value.trim();
+    if (!iban) {
+      resultBox.innerHTML = `<p class="error-message">Please enter IBAN.</p>`;
       return;
     }
-    let html = `<div class='result-box'><strong>Results:</strong><br>`;
-    ibans.forEach((iban) => {
-      const clean = iban.trim();
-      const valid = /^[A-Z]{2}\d{2}[A-Z0-9]{10,30}$/.test(clean);
-      html += `${clean} → ${valid ? "✅ Valid" : "❌ Invalid"}<br>`;
-    });
-    html += `</div>`;
-    resultBox.innerHTML = html;
+
+    resultBox.innerHTML = `<p class="loading">Checking IBAN...</p>`;
+
+    try {
+      const response = await fetch("/api/v1/iban/check", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + getToken(),
+        },
+        body: JSON.stringify({ "iban": iban }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        
+        resultBox.innerHTML = `
+        <div class="error-box">
+          <strong>Error:</strong> ${data.message || "Unknown error occurred."}
+        </div>`;
+        return;
+      }
+
+
+      const { decision, score, reasons } = data;
+      let decisionClass = decision === "ALLOW" ? "success" : "error";
+
+      resultBox.innerHTML = `
+      <div class="result-box ${decisionClass}">
+        <p><strong>IBAN:</strong> ${data.iban}</p>
+        <p><strong>Decision:</strong> 
+          <span class="decision-${decision.toLowerCase()}">${decision}</span>
+        </p>
+        <p><strong>Score:</strong> ${score}</p>
+        ${
+          reasons && reasons.length
+            ? `<p><strong>Reasons:</strong><br>${reasons
+                .map((r) => `• ${r}`)
+                .join("<br>")}</p>`
+            : ""
+        }
+      </div>`;
+    } catch (err) {
+      
+      resultBox.innerHTML = `
+      <div class="error-box">
+        <strong>Request failed:</strong> ${err.message}
+      </div>`;
+    }
   }
 
   handleReport() {
@@ -71,7 +117,7 @@ export class Dashboard {
     res.innerHTML = `
       <div class='result-box'>
         🚨 <strong>Report submitted</strong> for IBAN <b>${iban}</b><br>
-        Reason: ${reason || 'N/A'}<br>
+        Reason: ${reason || "N/A"}<br>
         ✅ Thank you for helping keep transactions secure.
       </div>
     `;

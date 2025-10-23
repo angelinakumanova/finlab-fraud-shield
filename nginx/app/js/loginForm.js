@@ -38,7 +38,7 @@ export class CorporateLoginForm {
       await login(username, password);
       this.showSuccess();
     } catch (error) {
-      showError("An error occured. Contact the IT administrator.");
+      showError(error);
     } finally {
       setLoading(this.submitButton, false);
     }
@@ -49,7 +49,6 @@ export class CorporateLoginForm {
   loginHeader.classList.add('hidden');
   this.form.style.display = "none";
   this.successMessage.classList.add("show");
-  document.body.style.background = "linear-gradient(135deg, #d1fae5, #6ee7b7)";
 
   setTimeout(() => {
     const loginContainer = document.getElementById('login-container');
@@ -57,8 +56,6 @@ export class CorporateLoginForm {
 
     loginContainer.classList.add("hidden");
     dashboard.classList.remove("hidden");
-
-    document.body.style.background = "linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%)";
 
     new Dashboard();
   }, 2500);
