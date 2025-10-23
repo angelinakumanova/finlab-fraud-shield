@@ -3,7 +3,9 @@ server:
 
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/accounts_db}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/finlab_db?currentSchema=accounts}
     username: ${SPRING_DATASOURCE_USERNAME:dev}
     password: ${SPRING_DATASOURCE_PASSWORD:dev}
 
+app:
+  internal-api-key: ${INTERNAL_API_KEY}
