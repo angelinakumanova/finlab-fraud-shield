@@ -1,4 +1,4 @@
-package com.finlab.api_gateway.controller.dto;
+package com.finlab.gateway.controller.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

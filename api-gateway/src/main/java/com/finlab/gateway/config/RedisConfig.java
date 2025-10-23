@@ -1,4 +1,4 @@
-package com.finlab.api_gateway.config;
+package com.finlab.gateway.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
