@@ -2,7 +2,6 @@ server:
   port: ${SERVER_PORT:8081}
 
 app:
-  accountsUrl: ${ACCOUNTS_URL:http://localhost:8082}
   jwt:
     secret-b64: ${JWT_SIGNING_KEY_B64}
     ttl-seconds: ${JWT_TTL_SECONDS:900}
@@ -14,12 +13,15 @@ spring:
       server:
         webflux:
           routes:
-            - id: fraud-check
-              uri: http://accounts-service:8081
+            - id: accounts-service
+              uri: ${ACCOUNTS_URL}
               predicates:
-                - Path=/api/v1/fraud
+                - Path=/api/v1/iban/**
               filters:
-                - AddRequestHeader=X-API-KEY, ${INTERNAL_API_KEY}
+                - name: AddRequestHeader
+                  args:
+                    name: X-API-KEY
+                    value: ${INTERNAL_API_KEY}
 
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/finlab_db?currentSchema=gateway}

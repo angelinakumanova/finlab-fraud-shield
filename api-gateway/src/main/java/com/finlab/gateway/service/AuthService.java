@@ -16,12 +16,14 @@ public class AuthService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final RedisTokenService redisTokenService;
 
 
-    public AuthService(UserRepository userRepository, JwtService jwtService) {
+    public AuthService(UserRepository userRepository, JwtService jwtService, RedisTokenService redisTokenService) {
         this.userRepository = userRepository;
         this.passwordEncoder = new BCryptPasswordEncoder();
         this.jwtService = jwtService;
+        this.redisTokenService = redisTokenService;
     }
 
     public String login(LoginRequest request) {
@@ -34,6 +36,7 @@ public class AuthService {
 
         String token = jwtService.generateToken(user.getUsername());
 
+        redisTokenService.saveToken(user.getUsername(), token);
 
 
         return token;
