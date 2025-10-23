@@ -1,18 +1,102 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>FinLab Fraud Shield</title>
+    <link rel="stylesheet" href="./static/main.css" />
   </head>
   <body>
-    <h1>FinLab Fraud Shield</h1>
-    <p id="out">Pinging the gateway...</p>
+    <!-- ===== LOGIN VIEW ===== -->
+    <div class="login-container" id="login-container">
+      <div class="login-card">
+        <div class="login-header">
+          <h2>FinLab Fraud Shield 💳</h2>
+          <p>Your payments secured.</p>
+        </div>
 
-    <script>
-      fetch('/api/v1/accounts/ping')
-        .then(r => r.text())
-        .then(text => document.getElementById('out').innerText = text)
-        .catch(err => document.getElementById('out').innerText = 'Error: ' + err);
-    </script>
+        <form class="login-form" id="loginForm" novalidate>
+          <div class="form-group">
+            <div class="input-wrapper">
+              <input type="text" id="username" name="username" required />
+              <label for="username">Username</label>
+              <span class="input-border"></span>
+            </div>
+
+            <div class="input-wrapper password-wrapper">
+              <input
+                type="password"
+                id="password"
+                name="password"
+                required
+                autocomplete="current-password"
+              />
+              <label for="password">Password</label>
+              <button
+                type="button"
+                class="password-toggle"
+                id="passwordToggle"
+                aria-label="Toggle password visibility"
+              >
+                <span class="toggle-icon"></span>
+              </button>
+              <span class="input-border"></span>
+            </div>
+            <span class="error-message" id="authError"></span>
+          </div>
+
+          <button type="submit" class="login-btn">
+            <span class="btn-text">Sign In</span>
+            <span class="btn-loader"></span>
+          </button>
+        </form>
+
+        <div class="success-message" id="successMessage">
+          <div class="success-icon">✓</div>
+          <h3>Authentication Successful</h3>
+          <p>Redirecting...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== DASHBOARD VIEW ===== -->
+    <div class="dashboard hidden" id="dashboard">
+      <div class="dashboard-card">
+        <h3>Welcome to FinLab Fraud Shield 🛡️</h3>
+        <div class="dashboard-buttons">
+          <button class="dashboard-btn" id="checkIbanBtn">
+            🔍 Check IBANs
+          </button>
+          <button class="dashboard-btn" id="reportIbanBtn">
+            🚨 Report Risky IBAN
+          </button>
+        </div>
+
+        <!-- Check IBAN Panel -->
+        <div class="panel" id="checkPanel">
+          <h4>Check Multiple IBANs</h4>
+          <textarea
+            id="ibanList"
+            placeholder="Enter IBANs (one per line)"
+          ></textarea>
+          <button class="submit-btn" id="checkBtn">Check IBANs</button>
+          <div id="checkResult"></div>
+        </div>
+
+        <!-- Report IBAN Panel -->
+        <div class="panel" id="reportPanel">
+          <h4>Report a Risky IBAN</h4>
+          <input
+            type="text"
+            id="riskyIban"
+            placeholder="Enter suspicious IBAN"
+          />
+          <textarea id="reason" placeholder="Reason (optional)"></textarea>
+          <button class="submit-btn" id="reportBtn">Submit Report</button>
+          <div id="reportResult"></div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="./js/main.js"></script>
   </body>
 </html>
