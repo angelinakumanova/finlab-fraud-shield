@@ -13,6 +13,6 @@ CREATE TABLE IF NOT EXISTS payments (
 );
 
 CREATE TABLE IF NOT EXISTS iban_accounts (
-                                             id SERIAL PRIMARY KEY,
-                                             iban VARCHAR(34) UNIQUE NOT NULL
+                          id SERIAL PRIMARY KEY,
+                          iban VARCHAR(34) UNIQUE NOT NULL
 );

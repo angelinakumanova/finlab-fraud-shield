@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/finlab}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/accounts_db}
     username: ${SPRING_DATASOURCE_USERNAME:dev}
     password: ${SPRING_DATASOURCE_PASSWORD:dev}
 
