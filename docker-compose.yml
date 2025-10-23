@@ -7,41 +7,51 @@ volumes:
   postgres_data:  
 
 services:
+  
   postgres:         
     image: postgres:16
     container_name: finlab_postgres
+    env_file: .env
     environment:
-      POSTGRES_USER: dev
-      POSTGRES_PASSWORD: dev
-      POSTGRES_DB: finlab
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: finlab_db
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - finlab-net
-    # ports:
-    #   - "5432:5432"
+    expose:
+      - "5432"
+    # DELETE LATER
+    ports:
+      - "5432:5432"
 
   redis:            
     image: redis:7
     container_name: finlab_redis
     networks:
       - finlab-net
-    # ports:
-    #   - "6379:6379"
+    expose:
+      - "6379"
+    # DELETE LATER
+    ports:
+      - "6379:6379"
 
   accounts-service: 
     build: ./accounts-service
     container_name: finlab_accounts
     depends_on:
       - postgres
+    env_file: .env
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/finlab
-      SPRING_DATASOURCE_USERNAME: dev
-      SPRING_DATASOURCE_PASSWORD: dev
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/finlab_db?currentSchema=accounts
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       SERVER_PORT: 8082
-    # ports:
-    #   - "8082:8082"
+    expose:
+      - "8082"
     networks:
       - finlab-net
 
@@ -50,14 +60,22 @@ services:
     container_name: finlab_gateway
     depends_on:
       - accounts-service
+      - postgres
       - redis
+    env_file: .env
     environment:
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY}
+      JWT_SIGNING_KEY_B64: ${JWT_SIGNING_KEY_B64}
+      JWT_TTL_SECONDS: ${JWT_TTL_SECONDS}
       ACCOUNTS_URL: http://accounts-service:8082
       REDIS_HOST: redis
       REDIS_PORT: 6379
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/finlab_db?currentSchema=gateway
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       SERVER_PORT: 8081
-    # ports:
-    #   - "8081:8081"
+    expose:
+      - "8081"
     networks:
       - finlab-net
 
