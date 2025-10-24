@@ -43,7 +43,7 @@ It verifies outgoing supplier payments against a **crowdsourced risk graph of IB
 > The same REST contract and container structure are preserved; only the underlying server model is reactive.
 
 
-## To access the app's UI, go to -> localhost:/app/
+## To access the app's UI, go to -> https://localhost/app/
 ## Credentials: username -> admin; password: admin
 
 ## ⚙️ Quick Start & Running Instructions
