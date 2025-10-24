@@ -9,10 +9,10 @@ import java.util.List;
 @Repository
 public class IbanRepository {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbc;
 
-    public IbanRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public IbanRepository(JdbcTemplate jdbc) {
+        this.jdbc = jdbc;
     }
 
     public IbanCheckResponse findRiskForIban(String iban) {
@@ -37,7 +37,7 @@ public class IbanRepository {
               COALESCE((SELECT cnt FROM neighbor_reports), 0) AS neighbor_cnt;
         """;
 
-        return jdbcTemplate.query(sql, ps -> ps.setString(1, iban), rs -> {
+        return jdbc.query(sql, ps -> ps.setString(1, iban), rs -> {
             if (!rs.next() || rs.getObject("iban_id") == null) {
                 return new IbanCheckResponse(iban, "ALLOW", 0.0, List.of("IBAN not found"));
             }
@@ -51,6 +51,51 @@ public class IbanRepository {
 
             return new IbanCheckResponse(iban, decision, score, reasons);
         });
+    }
+
+    public void insertReport(String iban, String reason, String reporterHash) {
+        Integer ibanId = jdbc.query("""
+            SELECT id FROM iban_accounts WHERE iban = ?
+        """, ps -> ps.setString(1, iban), rs -> rs.next() ? rs.getInt("id") : null);
+
+        if (ibanId == null) {
+            jdbc.update("INSERT INTO iban_accounts (iban) VALUES (?)", iban);
+            ibanId = jdbc.queryForObject("SELECT id FROM iban_accounts WHERE iban = ?", Integer.class, iban);
+        }
+
+        jdbc.update("""
+            INSERT INTO iban_reports (iban_id, reporter_hash, reason)
+            VALUES (?, ?, ?)
+        """, ibanId, reporterHash, reason);
+    }
+
+    public void insertEdge(String sourceIban, String targetIban) {
+        Integer sourceId = ensureIbanExists(sourceIban);
+        Integer targetId = ensureIbanExists(targetIban);
+
+        jdbc.update("""
+          INSERT INTO iban_edges (source_iban_id, target_iban_id)
+          VALUES (?, ?)
+          ON CONFLICT DO NOTHING
+        """, sourceId, targetId);
+
+        jdbc.update("""
+          INSERT INTO iban_edges (source_iban_id, target_iban_id)
+          VALUES (?, ?)
+          ON CONFLICT DO NOTHING
+        """, targetId, sourceId);
+    }
+
+    private Integer ensureIbanExists(String iban) {
+        Integer id = jdbc.query("""
+            SELECT id FROM iban_accounts WHERE iban = ?
+        """, ps -> ps.setString(1, iban), rs -> rs.next() ? rs.getInt("id") : null);
+
+        if (id == null) {
+            jdbc.update("INSERT INTO iban_accounts (iban) VALUES (?)", iban);
+            id = jdbc.queryForObject("SELECT id FROM iban_accounts WHERE iban = ?", Integer.class, iban);
+        }
+        return id;
     }
 
     private String decide(double score) {
