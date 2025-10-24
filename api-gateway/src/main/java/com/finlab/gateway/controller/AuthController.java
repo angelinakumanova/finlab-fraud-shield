@@ -1,7 +1,6 @@
 package com.finlab.gateway.controller;
 
 import com.finlab.gateway.controller.dto.LoginRequest;
-import com.finlab.gateway.security.JwtService;
 import com.finlab.gateway.service.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,5 +23,12 @@ public class AuthController {
 
         return ResponseEntity.ok()
                 .body(Map.of("token", token));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@RequestHeader("Authorization") String token) {
+        authService.logout(token);
+
+        return ResponseEntity.ok().body("Successfully logged out");
     }
 }

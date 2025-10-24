@@ -25,17 +25,20 @@ public class JwtService {
         return Keys.hmacShaKeyFor(decoded);
     }
 
-    public String generateToken(String username) {
+    public JwtResult generateToken(String username) {
         Instant now = Instant.now();
+        Instant expiresAt = now.plusSeconds(ttlSeconds);
         String jti = UUID.randomUUID().toString();
 
-        return Jwts.builder()
+        String token = Jwts.builder()
                 .id(jti)
                 .subject(username)
                 .issuedAt(Date.from(now))
-                .expiration(Date.from(now.plusSeconds(ttlSeconds)))
+                .expiration(Date.from(expiresAt))
                 .signWith(getKey())
                 .compact();
+
+        return new JwtResult(jti, token, now, expiresAt);
     }
 
     public Jws<Claims> parseToken(String token) {
@@ -43,5 +46,9 @@ public class JwtService {
                 .verifyWith(getKey())
                 .build()
                 .parseSignedClaims(token);
+    }
+
+    public String extractJwtId(String token) {
+        return parseToken(token).getPayload().getId();
     }
 }
