@@ -73,13 +73,6 @@ This script:
 - Builds all Docker images.  
 - Starts everything with Docker Compose.  
 
-After startup:
-| Service | URL |
-|----------|-----|
-| API Gateway | https://localhost:443 |
-| Accounts Service | http://localhost:8082 |
-| PostgreSQL | localhost:5432 |
-| Redis | localhost:6379 |
 
 Check container status:
 ```bash
