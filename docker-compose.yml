@@ -23,9 +23,6 @@ services:
       - finlab-net
     expose:
       - "5432"
-    # DELETE LATER
-    ports:
-      - "5432:5432"
 
   redis:            
     image: redis:7
@@ -34,9 +31,6 @@ services:
       - finlab-net
     expose:
       - "6379"
-    # DELETE LATER
-    ports:
-      - "6379:6379"
 
   accounts-service: 
     build: ./accounts-service
@@ -88,3 +82,21 @@ services:
       - "443:443"
     networks:
       - finlab-net
+
+  jmeter:
+    image: justb4/jmeter:latest
+    container_name: finlab_jmeter
+    depends_on:
+      - accounts-service
+    networks:
+      - finlab-net  
+    env_file: .env
+    volumes:
+      - ./stress_tests:/tests
+    working_dir: /tests
+    entrypoint: ["/bin/bash", "-c"]
+    command: >
+      bash -c "sleep 10 &&
+      jmeter -n -f -t /tests/normal_load.jmx
+      -l /tests/results/normal_load.csv
+      -e -o /tests/results/normal_load_html"

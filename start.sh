@@ -11,7 +11,7 @@ if [ ! -f "$ENV_FILE" ]; then
   JWT_SIGNING_KEY_B64=$(openssl rand -base64 32)
   INTERNAL_API_KEY=$(openssl rand -base64 32)
 
-  # You can keep the DB credentials simple since it's internal
+  # Internal Postgres credentials
   POSTGRES_USER=dev
   POSTGRES_PASSWORD=dev
   POSTGRES_DB=finlab_db
@@ -24,10 +24,6 @@ if [ ! -f "$ENV_FILE" ]; then
 POSTGRES_USER=$POSTGRES_USER
 POSTGRES_PASSWORD=$POSTGRES_PASSWORD
 POSTGRES_DB=$POSTGRES_DB
-
-# --- Redis ---
-REDIS_HOST=redis
-REDIS_PORT=6379
 
 # --- JWT ---
 JWT_SIGNING_KEY_B64=$JWT_SIGNING_KEY_B64
@@ -42,6 +38,16 @@ else
   echo "ℹ️ .env file already exists. Skipping generation."
 fi
 
-# Start Docker Compose
+# Export INTERNAL_API_KEY for other scripts (like JMeter)
+export $(grep INTERNAL_API_KEY $ENV_FILE)
+
+# Run docker compose
 echo "🚀 Starting containers..."
-docker-compose up --build
+docker compose up --build
+
+echo ""
+echo "🔑 Your generated API key is: $INTERNAL_API_KEY"
+echo "💡 You can use it in requests as the X-API-KEY header."
+echo ""
+echo "🧪 To run JMeter test after containers start:"
+echo "   ./stress_tests/run_jmeter.sh"

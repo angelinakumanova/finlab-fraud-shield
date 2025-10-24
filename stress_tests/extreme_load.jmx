@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="FraudShield - Extreme Load" enabled="true">
+      <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="PROTOCOL" elementType="Argument"><stringProp name="Argument.value">https</stringProp></elementProp>
+          <elementProp name="HOST" elementType="Argument"><stringProp name="Argument.value">nginx</stringProp></elementProp>
+          <elementProp name="PORT" elementType="Argument"><stringProp name="Argument.value">443</stringProp></elementProp>
+          <elementProp name="PATH" elementType="Argument"><stringProp name="Argument.value">/api/v1/iban/check</stringProp></elementProp>
+          <elementProp name="API_KEY" elementType="Argument"><stringProp name="Argument.value">${__env(INTERNAL_API_KEY)}</stringProp></elementProp>
+          <elementProp name="IBAN" elementType="Argument"><stringProp name="Argument.value">BG11BANK12341234567890</stringProp></elementProp>
+        </collectionProp>
+      </elementProp>
+    </TestPlan>
+    <hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Users - Extreme" enabled="true">
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" enabled="true">
+          <stringProp name="LoopController.loops">200</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">200</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">20</stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" enabled="true">
+          <stringProp name="HTTPSampler.protocol">${PROTOCOL}</stringProp>
+          <stringProp name="HTTPSampler.domain">${HOST}</stringProp>
+          <stringProp name="HTTPSampler.port">${PORT}</stringProp>
+        </ConfigTestElement>
+        <hashTree/>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" enabled="true">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="Content-Type" elementType="Header"><stringProp name="Header.value">application/json</stringProp></elementProp>
+            <elementProp name="X-API-KEY" elementType="Header"><stringProp name="Header.value">${API_KEY}</stringProp></elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST /check" enabled="true">
+          <stringProp name="HTTPSampler.path">${PATH}</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <stringProp name="HTTPSampler.postBodyRaw">true</stringProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <stringProp name="Argument.value">{ "iban": "${IBAN}" }</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" enabled="true">
+            <stringProp name="DurationAssertion.duration">500</stringProp>
+          </DurationAssertion>
+          <hashTree/>
+          <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" enabled="true">
+            <stringProp name="filename">results/extreme_load.csv</stringProp>
+          </ResultCollector>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
