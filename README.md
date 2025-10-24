@@ -21,8 +21,7 @@ It verifies outgoing supplier payments against a **crowdsourced risk graph of IB
   - `nginx` → HTTPS reverse proxy  
   - `postgres` → persistent store  
   - `redis` → cache layer  
-- 🔐 **Secure Auth Flow** – JWT tokens + internal API key.  
-- 📊 **Stress Testing** – integrated Apache JMeter container.
+- 🔐 **Secure Auth Flow** – JWT tokens + internal API key. 
 
 ---
 
@@ -125,25 +124,15 @@ X-API-KEY: <internal_api_key>
 
 ---
 
-### 5️⃣ Stress Testing (JMeter)
-
-Run tests through: run_jmeter.sh
+###  Stress Testing (JMeter)
 
 Two JMeter plans are included:
 - `normal_load.jmx`
 - `extreme_load.jmx`
 
-To run the extreme scenario, change `normal_load.jmx` → `extreme_load.jmx`.
-
-Reports:
-```
-stress_tests/results/normal/html/index.html
-stress_tests/results/extreme/html/index.html
-```
-
 ---
 
-### 6️⃣ Stop the System
+### 5️⃣ Stop the System
 ```bash
 docker compose down
 ```
