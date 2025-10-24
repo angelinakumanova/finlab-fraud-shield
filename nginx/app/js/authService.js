@@ -28,6 +28,35 @@ export async function login(username, password) {
   return { token };
 }
 
+document.getElementById("logoutBtn").addEventListener("click", async function () {
+  try {
+    
+    if (!JWTToken) {
+      alert("No active session found.");
+      return;
+    }
+    const response = await fetch("/api/v1/auth/logout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${JWTToken}`
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`Logout failed: ${response.status}`);
+    }
+
+    location.reload();
+
+    alert("You have been logged out successfully.");
+  } catch (error) {
+    console.error("Logout error:", error);
+    alert("An error occurred while logging out. Please try again.");
+  }
+});
+
+
 export function getToken() {
   return JWTToken;
 }

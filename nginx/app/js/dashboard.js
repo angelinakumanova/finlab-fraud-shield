@@ -1,6 +1,5 @@
 import { getToken } from "./authService.js";
 
-
 // dashboard.js
 export class Dashboard {
   constructor() {
@@ -62,20 +61,23 @@ export class Dashboard {
           "Content-Type": "application/json",
           Authorization: "Bearer " + getToken(),
         },
-        body: JSON.stringify({ "iban": iban }),
+        body: JSON.stringify({ iban: iban }),
       });
+
+      if (response.status === 401) {
+        location.reload();
+        return;
+      }
 
       const data = await response.json();
 
       if (!response.ok) {
-        
         resultBox.innerHTML = `
         <div class="error-box">
           <strong>Error:</strong> ${data.message || "Unknown error occurred."}
         </div>`;
         return;
       }
-
 
       const { decision, score, reasons } = data;
       let decisionClass = decision === "ALLOW" ? "success" : "error";
@@ -96,7 +98,6 @@ export class Dashboard {
         }
       </div>`;
     } catch (err) {
-      
       resultBox.innerHTML = `
       <div class="error-box">
         <strong>Request failed:</strong> ${err.message}
@@ -104,24 +105,65 @@ export class Dashboard {
     }
   }
 
-  handleReport() {
+  async handleReport() {
     const iban = document.getElementById("riskyIban").value.trim();
+    const relatedIban = document.getElementById('relatedIban').value.trim();
     const reason = document.getElementById("reason").value.trim();
     const res = document.getElementById("reportResult");
+
+    res.innerHTML = "";
 
     if (!iban) {
       res.innerHTML = `<p class='error-message'>Please enter an IBAN to report.</p>`;
       return;
     }
 
-    res.innerHTML = `
-      <div class='result-box'>
-        🚨 <strong>Report submitted</strong> for IBAN <b>${iban}</b><br>
-        Reason: ${reason || "N/A"}<br>
-        ✅ Thank you for helping keep transactions secure.
+    res.innerHTML = `<p class='loading'>Submitting report...</p>`;
+
+    try {
+      const response = await fetch("/api/v1/iban/report", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + getToken(),
+        },
+        body: JSON.stringify({ iban, relatedIban, reason }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        res.innerHTML = `
+        <div class="error-box">
+          <strong>Report failed:</strong> ${
+            data.message || "Unknown server error."
+          }
+        </div>`;
+        return;
+      }
+
+      res.innerHTML = `
+      <div class='result-box success'>
+        🚨 <strong>Report submitted successfully!</strong><br>
+        <b>IBAN:</b> ${data.iban || iban}<br>
+        <b>Reason: </b>${reason ? reason : "N/A"}
+        <br>
+        ${
+          data.message || "Thank you for helping keep transactions secure."
+        }
       </div>
     `;
-    document.getElementById("riskyIban").value = "";
-    document.getElementById("reason").value = "";
+
+      document.getElementById("riskyIban").value = "";
+      document.getElementById("reason").value = "";
+      document.getElementById('relatedIban').value = "";
+    } catch (err) {
+      res.innerHTML = `
+      <div class='error-box'>
+        <strong>Request failed:</strong> ${err.message}
+      </div>`;
+    }
   }
 }
+
+

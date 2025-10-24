@@ -11,7 +11,9 @@ export function clearError() {
   const errorElement = document.getElementById("authError");
   formGroup.classList.remove("error");
   errorElement.classList.remove("show");
-  setTimeout(() => (errorElement.textContent = ""), 300);
+  setTimeout(() => {
+    errorElement.textContent = "";
+  }, 300);
 }
 
 export function setLoading(button, loading) {

@@ -45,19 +45,19 @@ export class CorporateLoginForm {
   }
 
   showSuccess() {
-  const loginHeader = document.querySelector('.login-header');
-  loginHeader.classList.add('hidden');
-  this.form.style.display = "none";
-  this.successMessage.classList.add("show");
+    const loginHeader = document.querySelector(".login-header");
+    loginHeader.classList.add("hidden");
+    this.form.style.display = "none";
+    this.successMessage.classList.add("show");
 
-  setTimeout(() => {
-    const loginContainer = document.getElementById('login-container');
-    const dashboard = document.getElementById('dashboard');
+    setTimeout(() => {
+      const loginContainer = document.getElementById("login-container");
+      const dashboard = document.getElementById("dashboard");
 
-    loginContainer.classList.add("hidden");
-    dashboard.classList.remove("hidden");
+      loginContainer.classList.add("hidden");
+      dashboard.classList.remove("hidden");
 
-    new Dashboard();
-  }, 2500);
-}
+      new Dashboard();
+    }, 2500);
+  }
 }

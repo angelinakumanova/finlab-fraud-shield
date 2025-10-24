@@ -59,43 +59,38 @@
 
     <!-- ===== DASHBOARD VIEW ===== -->
     <div class="dashboard hidden" id="dashboard">
-      <div class="dashboard-card">
-        <h3>Welcome to FinLab Fraud Shield 🛡️</h3>
-        <div class="dashboard-buttons">
-          <button class="dashboard-btn" id="checkIbanBtn">
-            🔍 Check IBANs
-          </button>
-          <button class="dashboard-btn" id="reportIbanBtn">
-            🚨 Report Risky IBAN
-          </button>
-        </div>
-
-        <!-- Check IBAN Panel -->
-        <div class="panel" id="checkPanel">
-          <h4>Check IBAN</h4>
-          <input
-            type="text"
-            id="checkIban"
-            placeholder="Enter IBAN"
-          />
-          <button class="submit-btn" id="checkBtn">Check IBAN</button>
-          <div id="checkResult"></div>
-        </div>
-
-        <!-- Report IBAN Panel -->
-        <div class="panel" id="reportPanel">
-          <h4>Report a Risky IBAN</h4>
-          <input
-            type="text"
-            id="riskyIban"
-            placeholder="Enter suspicious IBAN"
-          />
-          <textarea id="reason" placeholder="Reason (optional)"></textarea>
-          <button class="submit-btn" id="reportBtn">Submit Report</button>
-          <div id="reportResult"></div>
-        </div>
-      </div>
+  <div class="dashboard-card">
+    <div class="logout-container">
+      <button class="logout-btn" id="logoutBtn">🚪 Logout</button>
     </div>
+
+    <h3>Welcome to FinLab Fraud Shield 🛡️</h3>
+
+    <div class="dashboard-buttons">
+      <button class="dashboard-btn" id="checkIbanBtn">🔍 Check IBANs</button>
+      <button class="dashboard-btn" id="reportIbanBtn">🚨 Report Risky IBAN</button>
+    </div>
+
+    <!-- Check IBAN Panel -->
+    <div class="panel" id="checkPanel">
+      <h4>Check IBAN</h4>
+      <input type="text" id="checkIban" placeholder="Enter IBAN" />
+      <button class="submit-btn" id="checkBtn">Check IBAN</button>
+      <div id="checkResult"></div>
+    </div>
+
+    <!-- Report IBAN Panel -->
+    <div class="panel" id="reportPanel">
+      <h4>Report a Risky IBAN</h4>
+      <input type="text" id="riskyIban" placeholder="Enter suspicious IBAN" />
+      <input type="text" id="relatedIban" placeholder="Enter related IBAN (optional)" />
+      <textarea id="reason" placeholder="Reason (optional)"></textarea>
+      <button class="submit-btn" id="reportBtn">Submit Report</button>
+      <div id="reportResult"></div>
+    </div>
+  </div>
+</div>
+
 
     <script type="module" src="./js/main.js"></script>
   </body>
