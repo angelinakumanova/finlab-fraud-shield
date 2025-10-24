@@ -15,8 +15,8 @@ public class RedisTokenService {
         this.redisTemplate = redisTemplate;
     }
 
-    public void saveToken(String username, String token) {
-        redisTemplate.opsForValue().set("token:" + username, token, Duration.ofHours(1));
+    public void saveToken(String username, String token, Duration duration) {
+        redisTemplate.opsForValue().set("token:" + username, token, duration);
     }
 
     public Optional<String> getToken(String username) {

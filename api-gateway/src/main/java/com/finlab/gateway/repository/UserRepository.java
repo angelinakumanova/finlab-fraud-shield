@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public class UserRepository {
@@ -21,6 +22,7 @@ public class UserRepository {
             String sql = "SELECT id, username, password FROM users WHERE username = ?";
             User user = jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
                 User u = new User();
+                u.setId(UUID.fromString(rs.getString("id")));
                 u.setUsername(rs.getString("username"));
                 u.setPassword(rs.getString("password"));
                 return u;
