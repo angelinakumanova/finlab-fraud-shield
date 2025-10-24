@@ -1,2 +1,4 @@
 # finlab-fraud-shield
-Containerized multi-service system built for FinLab Challenge 01 - “Instant Invoice: Fraud Shield”. Uses Java 21, Spring Boot 3, PostgreSQL, Redis and Nginx to detect invoice fraud in ≤ 200 ms via a secure API gateway.
+Note: 
+I implemented the API Gateway with Spring WebFlux instead of Spring MVC to achieve higher scalability under concurrent load.
+The same REST contract and container structure are preserved; only the underlying server model is reactive.”
