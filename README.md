@@ -1,6 +1,8 @@
 # 🧾 FinLab Fraud Shield – Instant Invoice Fraud Detection
+🏆 **Second place in the hackathon** 🏆
 
-> **Team:** Andjelina • FinLab Hackathon 2025  
+> **Team:** Andjelina • FinLab Hackathon 2025
+
 
 ---
 
@@ -57,16 +59,18 @@ It verifies outgoing supplier payments against a **crowdsourced risk graph of IB
 
 ### 1️⃣ Clone the Project
 ```bash
-git clone https://github.com/<your-username>/finlab-fraud-shield.git
+git clone https://github.com/angelinakumanova/finlab-fraud-shield.git
 cd finlab-fraud-shield
 ```
 
 ---
 
 ### 2️⃣ Start the Stack
+(Make sure **Docker Engine** is running)
 ```bash
 ./start.sh
 ```
+
 This script:
 - Generates a `.env` with random secrets and API keys.  
 - Builds all Docker images.  
